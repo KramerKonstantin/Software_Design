@@ -14,7 +14,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
         public final V VALUE;
         public final K KEY;
 
-        public Node (K key, V value) {
+        public Node(K key, V value) {
             this.VALUE = value;
             this.KEY = key;
         }
@@ -36,19 +36,19 @@ public class LRUCache<K, V> implements Cache<K, V> {
             node.previous.next = next;
             node.next.previous = previous;
         } else if (previous != null) {
-            assert tail == node;
+            assert tail == node : "A node that doesn't have a next node is a tail";
             tail = tail.previous;
         } else if (next == null) {
-            if (head == null) {
+            if (tail == null) {
                 head = tail = node;
                 return;
             }
         } else {
-            assert head == node;
+            assert head == node : "A node that doesn't have a previous node is a head";
             return;
         }
 
-        assert head != null && tail != null;
+        assert head != null && tail != null : "Cache has got some value, head and tail mustn't be null";
 
         head.previous = node;
         node.next = head;
@@ -63,7 +63,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
         }
 
         moveToHead(node);
-        assert head == node;
+        assert head == node : "After using the node, it should be in the head";
 
         return node.VALUE;
     }
@@ -80,18 +80,22 @@ public class LRUCache<K, V> implements Cache<K, V> {
             throw new IllegalStateException(exception);
         }
 
-        if (VALUES.size() >= CAPACITY) {
-            assert VALUES.remove(tail.KEY) != null;
+        if (VALUES.size() + 1 > CAPACITY) {
+            if (VALUES.remove(tail.KEY) == null) {
+                throw new AssertionError("Can't remove values from empty cache");
+            }
             tail = tail.previous;
 
-            assert VALUES.size() < CAPACITY;
+            assert VALUES.size() < CAPACITY : "Cache has a size smaller than constant CAPACITY";
         }
 
         Node newNode = new Node(key, value);
-        assert VALUES.put(key, newNode) == null;
+        if (VALUES.put(key, newNode) != null) {
+            throw new AssertionError("If was no mapping for key than must be NULL");
+        }
 
         moveToHead(newNode);
-        assert head == newNode;
+        assert head == newNode : "After using the node, it should be in the head";
     }
 
     @Override
