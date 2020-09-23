@@ -1,4 +1,4 @@
-public interface Cache<K, V> {
+public interface MyCache<K, V> {
     /**
      * Returns value from cache associated with given key if it exists.
      * Otherwise, returns <b>null</b>.

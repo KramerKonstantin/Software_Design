@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class LRUTestUnit {
+public class LRUCacheTest {
     private final Random random = new Random();
 
     private static <K, V> LRUCache<K, V> getInstance(int capacity) {
@@ -48,6 +48,20 @@ public class LRUTestUnit {
             assertEquals(cache.getCapacity(), capacity);
         }
 
+        @Test
+        @DisplayName("Test with CAPACITY equals 1")
+        public void testWithCapacityOne() {
+            int capacity = 1;
+            int toInsert = capacity + 10 + random.nextInt(100);
+            LRUCache<Integer, String> cache = getInstance(capacity);
+            for (int i = 0; i < toInsert; i++) {
+                cache.put(i, "value-" + i);
+            }
+
+            String expectedValueInTail = "value-" + (toInsert - 1);
+            String actualValueInTail = cache.get(toInsert - 1);
+            assertEquals(expectedValueInTail, actualValueInTail);
+        }
     }
 
     @Nested
@@ -201,29 +215,8 @@ public class LRUTestUnit {
             assertNull(cache.get(1));
         }
 
-    }
-
-    @Nested
-    @DisplayName("My Tests")
-    public class MyTestUnit {
-
         @Test
-        @DisplayName("Test with CAPACITY equals 1")
-        public void testWithCapacityOne() {
-            int capacity = 1;
-            int toInsert = capacity + 10 + random.nextInt(capacity);
-            LRUCache<Integer, String> cache = getInstance(capacity);
-            for (int i = 0; i < toInsert; i++) {
-                cache.put(i, "value-" + i);
-            }
-
-            String expectedValueInTail = "value-" + (toInsert - 1);
-            String actualValueInTail = cache.get(toInsert - 1);
-            assertEquals(expectedValueInTail, actualValueInTail);
-        }
-
-        @Test
-        @DisplayName("Test GET with key  NULL")
+        @DisplayName("Test GET with key NULL")
         public void testGetNull() {
             int capacity = 100;
             int toInsert = capacity + 10 + random.nextInt(capacity);

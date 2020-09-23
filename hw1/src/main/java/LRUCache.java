@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class LRUCache<K, V> implements Cache<K, V> {
+public class LRUCache<K, V> implements MyCache<K, V> {
     protected final Map<K, Node> VALUES = new HashMap<>();
 
     protected final int CAPACITY;
