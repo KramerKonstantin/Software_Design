@@ -26,3 +26,21 @@
    * Кол должен быть покрыт тестами (в том числе mock-тестами и тестами с StubServer)
 
 ## [Домашнее задание 3.](https://github.com/KramerKonstantin/Software_Design/tree/master/hw3)
+1. Цель - получить практический опыт применения техник рефакторинга.
+
+2. [Скачайте приложение.](https://github.com/akirakozov/software-design/tree/master/java/refactoring)
+
+3. Приложение представляет собой простой web-server, который хранит информацию о товарах и их цене.
+
+4. Поддержаны такие методы:
+   * [http://localhost:8081/get-products](http://localhost:8081/get-products) - посмотреть все товары в базе
+   * [http://localhost:8081/add-product?name=iphone6&price=300](http://localhost:8081/add-product?name=iphone6&price=300) - добавить новый товар
+   * [http://localhost:8081/query?command=sum](http://localhost:8081/query?command=sum) - выполнить некоторый запрос с данными в базе
+
+5. Необходимо отрефакторить этот код (логика методов не должна измениться), например:
+   * убрать дублирование
+   * выделить отдельный слой работы с БД
+   * выделить отдельный слой формирования html-ответа
+   * и тд
+   
+## [Домашнее задание 4.](https://github.com/KramerKonstantin/Software_Design/tree/master/hw4)
