@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile "org.mockito:mockito-core:2.+"
+    testCompile('org.mockito:mockito-junit-jupiter:2.18.3')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+
+    compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.21.v20190926'
+    compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.21.v20190926'
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.8.11.2'
+}
+
+test {
+    useJUnitPlatform()
+}
