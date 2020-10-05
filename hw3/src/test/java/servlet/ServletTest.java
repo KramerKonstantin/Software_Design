@@ -1,5 +1,7 @@
 package servlet;
 
+import dao.Product;
+import dao.ProductDAO;
 import db.DBUtil;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
@@ -13,6 +15,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -43,6 +46,8 @@ public class ServletTest {
     private HttpServletRequest requestMock;
     @Mock
     private HttpServletResponse responseMock;
+    @Mock
+    private ProductDAO productDAOMock;
 
     private StringWriter stringWriter;
     private PrintWriter printWriter;
@@ -62,7 +67,7 @@ public class ServletTest {
         Mockito.when(requestMock.getParameter("price")).thenReturn("600");
         Mockito.when(responseMock.getWriter()).thenReturn(printWriter);
 
-        new AddProductServlet().doGet(requestMock, responseMock);
+        new AddProductServlet(productDAOMock).doGet(requestMock, responseMock);
 
         Mockito.verify(requestMock, Mockito.atLeastOnce()).getParameter("name");
         Mockito.verify(requestMock, Mockito.atLeastOnce()).getParameter("price");
@@ -74,19 +79,21 @@ public class ServletTest {
     @Test
     @DisplayName("Get product servlet test")
     public void getProductServletTest() throws IOException {
+        Mockito.when(productDAOMock.getProduct()).thenReturn(List.of(
+                new Product("iphone6", 300),
+                new Product("iphone7", 400),
+                new Product("iphone8", 500),
+                new Product("iphone9", 600)
+        ));
         Mockito.when(responseMock.getWriter()).thenReturn(printWriter);
 
-        new GetProductsServlet().doGet(requestMock, responseMock);
+        new GetProductsServlet(productDAOMock).doGet(requestMock, responseMock);
 
         String result = stringWriter.toString();
-        assertTrue(result.contains("iphone6"));
-        assertTrue(result.contains("300"));
-        assertTrue(result.contains("iphone7"));
-        assertTrue(result.contains("400"));
-        assertTrue(result.contains("iphone8"));
-        assertTrue(result.contains("500"));
-        assertTrue(result.contains("iphone9"));
-        assertTrue(result.contains("600"));
+        assertTrue(result.contains("iphone6\t300"));
+        assertTrue(result.contains("iphone7\t400"));
+        assertTrue(result.contains("iphone8\t500"));
+        assertTrue(result.contains("iphone9\t600"));
     }
 
     @Nested
@@ -96,42 +103,48 @@ public class ServletTest {
         @Test
         @DisplayName("Test max")
         public void testMax() throws IOException {
+            Mockito.when(productDAOMock.findMaxProduct())
+                    .thenReturn(new Product("iphone9", 600));
+
             Mockito.when(requestMock.getParameter("command")).thenReturn("max");
             Mockito.when(responseMock.getWriter()).thenReturn(printWriter);
 
-            new QueryServlet().doGet(requestMock, responseMock);
+            new QueryServlet(productDAOMock).doGet(requestMock, responseMock);
 
             Mockito.verify(requestMock, Mockito.atLeastOnce()).getParameter("command");
 
             String result = stringWriter.toString();
             assertTrue(result.contains("Product with max price"));
-            assertTrue(result.contains("iphone9"));
-            assertTrue(result.contains("600"));
+            assertTrue(result.contains("iphone9\t600"));
         }
 
         @Test
         @DisplayName("Test min")
         public void testMin() throws IOException {
+            Mockito.when(productDAOMock.findMinProduct())
+                    .thenReturn(new Product("iphone6", 300));
+
             Mockito.when(requestMock.getParameter("command")).thenReturn("min");
             Mockito.when(responseMock.getWriter()).thenReturn(printWriter);
 
-            new QueryServlet().doGet(requestMock, responseMock);
+            new QueryServlet(productDAOMock).doGet(requestMock, responseMock);
 
             Mockito.verify(requestMock, Mockito.atLeastOnce()).getParameter("command");
 
             String result = stringWriter.toString();
             assertTrue(result.contains("Product with min price"));
-            assertTrue(result.contains("iphone6"));
-            assertTrue(result.contains("300"));
+            assertTrue(result.contains("iphone6\t300"));
         }
 
         @Test
         @DisplayName("Test sum")
         public void testSum() throws IOException {
+            Mockito.when(productDAOMock.sumProductPrice()).thenReturn(1800L);
+
             Mockito.when(requestMock.getParameter("command")).thenReturn("sum");
             Mockito.when(responseMock.getWriter()).thenReturn(printWriter);
 
-            new QueryServlet().doGet(requestMock, responseMock);
+            new QueryServlet(productDAOMock).doGet(requestMock, responseMock);
 
             Mockito.verify(requestMock, Mockito.atLeastOnce()).getParameter("command");
 
@@ -143,10 +156,12 @@ public class ServletTest {
         @Test
         @DisplayName("Test count")
         public void testCount() throws IOException {
+            Mockito.when(productDAOMock.countProducts()).thenReturn(4L);
+
             Mockito.when(requestMock.getParameter("command")).thenReturn("count");
             Mockito.when(responseMock.getWriter()).thenReturn(printWriter);
 
-            new QueryServlet().doGet(requestMock, responseMock);
+            new QueryServlet(productDAOMock).doGet(requestMock, responseMock);
 
             Mockito.verify(requestMock, Mockito.atLeastOnce()).getParameter("command");
 
@@ -161,7 +176,7 @@ public class ServletTest {
             Mockito.when(requestMock.getParameter("command")).thenReturn("???");
             Mockito.when(responseMock.getWriter()).thenReturn(printWriter);
 
-            new QueryServlet().doGet(requestMock, responseMock);
+            new QueryServlet(productDAOMock).doGet(requestMock, responseMock);
 
             Mockito.verify(requestMock, Mockito.atLeastOnce()).getParameter("command");
 
