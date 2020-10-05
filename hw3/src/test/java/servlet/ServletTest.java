@@ -79,7 +79,7 @@ public class ServletTest {
     @Test
     @DisplayName("Get product servlet test")
     public void getProductServletTest() throws IOException {
-        Mockito.when(productDAOMock.getProduct()).thenReturn(List.of(
+        Mockito.when(productDAOMock.getProducts()).thenReturn(List.of(
                 new Product("iphone6", 300),
                 new Product("iphone7", 400),
                 new Product("iphone8", 500),
@@ -103,8 +103,8 @@ public class ServletTest {
         @Test
         @DisplayName("Test max")
         public void testMax() throws IOException {
-            Mockito.when(productDAOMock.findMaxProduct())
-                    .thenReturn(new Product("iphone9", 600));
+            Mockito.when(productDAOMock.findMaxProducts())
+                    .thenReturn(List.of(new Product("iphone9", 600)));
 
             Mockito.when(requestMock.getParameter("command")).thenReturn("max");
             Mockito.when(responseMock.getWriter()).thenReturn(printWriter);
@@ -121,8 +121,8 @@ public class ServletTest {
         @Test
         @DisplayName("Test min")
         public void testMin() throws IOException {
-            Mockito.when(productDAOMock.findMinProduct())
-                    .thenReturn(new Product("iphone6", 300));
+            Mockito.when(productDAOMock.findMinProducts())
+                    .thenReturn(List.of(new Product("iphone6", 300)));
 
             Mockito.when(requestMock.getParameter("command")).thenReturn("min");
             Mockito.when(responseMock.getWriter()).thenReturn(printWriter);
@@ -132,6 +132,7 @@ public class ServletTest {
             Mockito.verify(requestMock, Mockito.atLeastOnce()).getParameter("command");
 
             String result = stringWriter.toString();
+            System.out.println(result);
             assertTrue(result.contains("Product with min price"));
             assertTrue(result.contains("iphone6\t300"));
         }

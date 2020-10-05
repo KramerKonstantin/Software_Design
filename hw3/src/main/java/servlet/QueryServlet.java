@@ -6,13 +6,9 @@ import dao.ProductDAO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author akirakozov
@@ -41,15 +37,23 @@ public class QueryServlet extends AbstractServlet {
     }
 
     private void doMax(HttpServletResponse response) throws IOException {
-        Product maxProduct = productDAO.findMaxProduct();
-        List<String> info = List.of("<h1>Product with max price: </h1>", maxProduct.toHttpString());
+        List<String> maxProducts = productDAO.findMaxProducts()
+                .stream().map(Product::toHttpString).collect(Collectors.toList());
+
+        List<String> info = new ArrayList<>();
+        info.add("<h1>Product with max price: </h1>");
+        info.addAll(maxProducts);
 
         addHttpInfo(response, info);
     }
 
     private void doMin(HttpServletResponse response) throws IOException {
-        Product minProduct = productDAO.findMinProduct();
-        List<String> info = List.of("<h1>Product with min price: </h1>", minProduct.toHttpString());
+        List<String> minProducts = productDAO.findMinProducts()
+                .stream().map(Product::toHttpString).collect(Collectors.toList());
+
+        List<String> info = new ArrayList<>();
+        info.add("<h1>Product with min price: </h1>");
+        info.addAll(minProducts);
 
         addHttpInfo(response, info);
     }

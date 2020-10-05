@@ -22,7 +22,7 @@ public class GetProductsServlet extends AbstractServlet {
 
     @Override
     protected void doRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<Product> products = productDAO.getProduct();
+        List<Product> products = productDAO.getProducts();
         List<String> info = products.stream().map(Product::toHttpString).collect(Collectors.toList());
 
         addHttpInfo(response, info);
