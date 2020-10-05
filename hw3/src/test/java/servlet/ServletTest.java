@@ -1,5 +1,6 @@
 package servlet;
 
+import db.DBUtil;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -10,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -21,11 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ServletTest {
 
     private static void sqlRequest(String request) {
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:test.db")) {
-            Statement statement = connection.createStatement();
-
-            statement.executeUpdate(request);
-            statement.close();
+        try (Statement stmt = DBUtil.getStatement()) {
+            stmt.executeUpdate(request);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -33,15 +29,14 @@ public class ServletTest {
     }
 
     @BeforeAll
-    static void initTable() {
-        sqlRequest("DROP TABLE IF EXISTS product");
-        sqlRequest("CREATE TABLE IF NOT EXISTS product" +
-                "(id    INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                " name  TEXT    NOT NULL, " +
-                " price INT     NOT NULL)");
-        sqlRequest("INSERT INTO product (name, price) VALUES (\"iphone6\", 300)");
-        sqlRequest("INSERT INTO product (name, price) VALUES (\"iphone7\", 400)");
-        sqlRequest("INSERT INTO product (name, price) VALUES (\"iphone8\", 500)");
+    static void initTable() throws SQLException {
+        sqlRequest("DROP TABLE IF EXISTS PRODUCT");
+
+        DBUtil.initDB();
+
+        sqlRequest("INSERT INTO PRODUCT (NAME, PRICE) VALUES (\"iphone6\", 300)");
+        sqlRequest("INSERT INTO PRODUCT (NAME, PRICE) VALUES (\"iphone7\", 400)");
+        sqlRequest("INSERT INTO PRODUCT (NAME, PRICE) VALUES (\"iphone8\", 500)");
     }
 
     @Mock
