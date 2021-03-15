@@ -45,7 +45,7 @@ public class RunTests {
     }
 
     @Test
-    @DisplayName("Report serice test")
+    @DisplayName("Report service test")
     public void reportServiceTest() throws CreationException, ExtensionException, CollectionException, EntryException, ExitException {
         TurnstileService turnstile = new TurnstileService(eventStorage, clock);
         ReportService report = new ReportService();

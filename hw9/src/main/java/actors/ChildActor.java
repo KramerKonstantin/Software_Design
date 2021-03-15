@@ -12,7 +12,6 @@ import akka.event.LoggingAdapter;
 import search.SearchQuery;
 import search.SearcherDescriptor;
 
-
 public class ChildActor extends AbstractActor {
     private final LoggingAdapter log = Logging.getLogger(getContext().system(), this);
     private final SearcherDescriptor info;

@@ -13,7 +13,6 @@ import search.SearchQuery;
 import search.SearcherDescriptor;
 import scala.concurrent.duration.Duration;
 
-
 public class ActorQueriesService {
     private final List<SearcherDescriptor> infos;
 

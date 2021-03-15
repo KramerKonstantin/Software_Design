@@ -5,7 +5,6 @@ public class SearcherDescriptor {
     private final String engine;
     private final int port;
 
-
     public SearcherDescriptor(String host, String engine, int port) {
         this.host = host;
         this.engine = engine;
